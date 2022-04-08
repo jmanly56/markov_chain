@@ -149,6 +149,7 @@
     <None Include="..\..\source\repos\markov_chain\.clang-format" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CSVParser\csv.hpp" />
     <ClInclude Include="markov_chain.h" />
     <ClInclude Include="tokenizer.h" />
   </ItemGroup>
