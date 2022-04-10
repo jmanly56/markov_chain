@@ -9,8 +9,9 @@ int Tokenizer::create_vocab(std::vector<std::string> data)
 { 
         for (auto iter = data.begin(); iter != data.end();) {
                 std::string s = *iter;
-
-
+                s = standardize(s);
+                std::vector<std::string> v = split(s, ' ');
+                data.erase(iter);
         }
         return 0;
 }
