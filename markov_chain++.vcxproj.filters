@@ -26,9 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\source\repos\markov_chain\.clang-format" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="markov_chain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -38,5 +35,8 @@
     <ClInclude Include="CSVParser\csv.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
   </ItemGroup>
 </Project>
