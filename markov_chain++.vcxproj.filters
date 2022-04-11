@@ -32,11 +32,9 @@
     <ClInclude Include="vectorizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CSVParser\csv.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

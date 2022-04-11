@@ -146,12 +146,12 @@
     <ClCompile Include="vectorizer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CSVParser\csv.hpp" />
     <ClInclude Include="markov_chain.h" />
     <ClInclude Include="vectorizer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
