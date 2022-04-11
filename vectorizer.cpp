@@ -25,7 +25,9 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
         // of the map is no longer required.
 
         if (max_tokens != -1 && max_tokens < 3) {
-                std::cerr << "Invalid parameter max_tokens. Acceptable values: -1 or a number > 2.\n";
+                std::cerr << "Invalid parameter max_tokens. Acceptable values: -1 or a number > 2."
+                          << " Did not create a vocabulary.\n";          
+                return;
         }
 
         _tokens = new std::unordered_map<std::string, Token>{};
