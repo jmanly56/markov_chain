@@ -32,7 +32,7 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
 
         _tokens = new std::unordered_map<std::string, Token>{};
 
-        auto process_data = [&](std::string s) {
+        auto process_data = [&](std::string &s) {
                 if (lower) {
                         std::transform(s.begin(), s.end(), s.begin(),
                                 [](unsigned char c) { return std::tolower(c); });
