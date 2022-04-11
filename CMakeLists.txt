@@ -16,8 +16,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(markov_chain
         main.cpp
-        tokenizer.cpp
-        tokenizer.h
+        vectorizer.cpp
+        vectorizer.h
         markov_chain.cpp
         markov_chain.h
 )

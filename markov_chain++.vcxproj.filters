@@ -21,7 +21,7 @@
     <ClCompile Include="markov_chain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tokenizer.cpp">
+    <ClCompile Include="vectorizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="markov_chain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tokenizer.h">
+    <ClInclude Include="vectorizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CSVParser\csv.hpp">

@@ -42,13 +42,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -143,12 +143,12 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="markov_chain.cpp" />
-    <ClCompile Include="tokenizer.cpp" />
+    <ClCompile Include="vectorizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CSVParser\csv.hpp" />
     <ClInclude Include="markov_chain.h" />
-    <ClInclude Include="tokenizer.h" />
+    <ClInclude Include="vectorizer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
