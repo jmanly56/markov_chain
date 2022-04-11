@@ -1,14 +1,15 @@
 #include "vectorizer.h"
 #include <algorithm>
+#include <iostream>
+#include <regex>
 #include <set>
 #include <sstream>
-#include <regex>
-#include <iostream>
 
 const static std::regex chars_to_keep("[^ A-z0-9.?!,]");
 const static std::regex chars_add_space("([.?!,])");
 
-Vectorizer::Vectorizer() { 
+Vectorizer::Vectorizer()
+{
         _tokens = nullptr;
         _vocab.push_back({"", 0, 0});
         _vocab.push_back({"[UNK]", 0, 0});
@@ -26,7 +27,7 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
 
         if (max_tokens != -1 && max_tokens < 3) {
                 std::cerr << "Invalid parameter max_tokens. Acceptable values: -1 or a number > 2."
-                          << " Did not create a vocabulary.\n";          
+                          << " Did not create a vocabulary.\n";
                 return;
         }
 
@@ -35,7 +36,7 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
         auto process_data = [&](std::string &s) {
                 if (lower) {
                         std::transform(s.begin(), s.end(), s.begin(),
-                                [](unsigned char c) { return std::tolower(c); });
+                                       [](unsigned char c) { return std::tolower(c); });
                 }
                 s = _standardize(s);
                 std::vector<std::string> v = _split(s, ' ');
@@ -47,7 +48,7 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
         // Remove empty string from the token list.
         // It will however still appear in vocab.
         auto result = _tokens->find("");
-        _tokens->erase(""); 
+        _tokens->erase("");
 
         _create_token_vector(max_tokens);
 
@@ -76,12 +77,12 @@ void Vectorizer::_create_token_vector(int max_tokens)
                 _vocab.push_back(std::move(iter->second));
         }
         // When passed to sort, will sort items based on descending order of `tf`.
-        auto comp = [](const Token &a, const Token &b) { return b.tf < a.tf;};
+        auto comp = [](const Token &a, const Token &b) { return b.tf < a.tf; };
         // Regardless of max_tokens, we need to sort based on term frequency.
         // The reason for the + 2 is to skip the padding and unknown tokens.
         // We want those to always be index 0 and 1, respectively.
         std::sort(_vocab.begin() + 2, _vocab.end(), comp);
-        if (max_tokens == -1) {
+        if (max_tokens != -1) {
                 _vocab.resize(max_tokens);
                 _vocab.shrink_to_fit();
         }

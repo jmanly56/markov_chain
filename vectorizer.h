@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-/// @brief Tokenizes lines of text and creates a vocabulary to be used to 
+/// @brief Tokenizes lines of text and creates a vocabulary to be used to
 /// vectorize it.
 class Vectorizer
 {
@@ -21,10 +21,10 @@ class Vectorizer
         /// Internally, the input text is standardized and split on whitespace.
         /// @param data: A vector of strings to create a vocabulary from.
         /// @param lower: Whether to change all characters to lowercase. Default false.
-        /// @param max_tokens: The number of tokens to keep. Keeps the most frequent. Default -1 means no limit.
-        /// The actual size of the vocab will be max_tokens - 2 because of the reserved indices.
-        /// Acceptable values of max_tokens: -1 or n > 2.
-        void create_vocab(std::vector<std::string> data, bool lower=false, int max_tokens=-1);
+        /// @param max_tokens: The number of tokens to keep. Keeps the most frequent. Default -1
+        /// means no limit. The actual size of the vocab will be max_tokens - 2 because of the
+        /// reserved indices. Acceptable values of max_tokens: -1 or n > 2.
+        void create_vocab(std::vector<std::string> data, bool lower = false, int max_tokens = -1);
 
     private:
         /// @brief Holds the token, and its term and document frequencies.
@@ -36,15 +36,17 @@ class Vectorizer
                 int64_t df = 0;
         };
 
-        // Only used in the `create_vocab` function. It is allocated and deallocated in that function.
+        // Only used in the `create_vocab` function. It is allocated and deallocated in that
+        // function.
         std::unordered_map<std::string, Token> *_tokens;
         std::vector<Token> _vocab;
-        
+
         /// @brief Remove certain characters from the string,
         /// and add space around punctuation.
         std::string _standardize(std::string &str);
 
-        /// @brief Splits the string on the given delimiter using getline, and returns a vector of tokens.
+        /// @brief Splits the string on the given delimiter using getline, and returns a vector of
+        /// tokens.
         std::vector<std::string> _split(const std::string &str, char delim);
 
         /// @brief Compute the tf and df of the given vector of strings.
