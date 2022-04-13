@@ -26,6 +26,28 @@ class Vectorizer
         /// reserved indices. Acceptable values of max_tokens: -1 or n > 2.
         void create_vocab(std::vector<std::string> data, bool lower = false, int max_tokens = -1);
 
+        /// @brief Convert the input data to an integer index. Will allocate a 2D array on the heap.
+        /// Pre condition: `create_vocab` has been called.  
+        /// @param data: The text lines to vectorize.
+        /// @return A heap allocated 2D array of vectorized features. Must be deallocated.
+        int32_t **vectorize(const std::vector<std::string> &data);
+
+        /// @brief Calculates and returns a heap allocated array of tf-idf values,
+        /// where each index corresponds to a given index of the vocabulary.
+        /// Pre condition: `create_vocab` has been called.
+        /// @return A heap allocated array of floats. Must be deallocated.
+        float *get_tf_idf_weights() const;
+
+        /// @brief Gets the string token for each index. Can be used to get a reverse lookup.  
+        /// Pre-condition: `create_vocab` has been called.
+        /// @return A vector of strings in their corresponding index. Includes the padding and unk tokens.
+        const std::vector<std::string*>& vocab() const;
+
+        /// @brief Get the size of the vocabulary, including the reserved padding and unk tokens.  
+        /// Pre-condition: `create_vocab` has been called.
+        /// @return The number of words in the vocabulary.
+        size_t vocab_size() const;
+
     private:
         /// @brief Holds the token, and its term and document frequencies.
         struct Token {
@@ -40,6 +62,7 @@ class Vectorizer
         // function.
         std::unordered_map<std::string, Token> *_tokens;
         std::vector<Token> _vocab;
+        std::vector<std::string*> _reverse_lookup;
 
         /// @brief Remove certain characters from the string,
         /// and add space around punctuation.

@@ -1,0 +1,1 @@
+/usr/bin/clang++ CMakeFiles/markov_chain.dir/main.cpp.o CMakeFiles/markov_chain.dir/vectorizer.cpp.o CMakeFiles/markov_chain.dir/markov_chain.cpp.o -o markov_chain 

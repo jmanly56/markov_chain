@@ -10,7 +10,6 @@ const static std::regex chars_add_space("([.?!,])");
 
 Vectorizer::Vectorizer()
 {
-        _tokens = nullptr;
         _vocab.push_back({"", 0, 0});
         _vocab.push_back({"[UNK]", 0, 0});
 }
@@ -33,27 +32,55 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
 
         _tokens = new std::unordered_map<std::string, Token>{};
 
-        auto process_data = [&](std::string &s) {
-                if (lower) {
+        if (lower) {
+                auto process_data = [&](std::string &s) {
                         std::transform(s.begin(), s.end(), s.begin(),
-                                       [](unsigned char c) { return std::tolower(c); });
-                }
-                s = _standardize(s);
-                std::vector<std::string> v = _split(s, ' ');
-                _process_tokens(v);
-        };
-        // Call the above lambda expression on each item of `data`.
-        std::for_each(data.begin(), data.end(), process_data);
+                                [](unsigned char c) { return std::tolower(c); });
+                        s = _standardize(s);
+                        std::vector<std::string> v = _split(s, ' ');
+                        _process_tokens(v);
+                };
+
+                std::for_each(data.begin(), data.end(), process_data);
+        } else {
+                auto process_data = [&](std::string &s) {
+                        s = _standardize(s);
+                        std::vector<std::string> v = _split(s, ' ');
+                        _process_tokens(v);
+                };
+                std::for_each(data.begin(), data.end(), process_data);
+       
+        }
 
         // Remove empty string from the token list.
         // It will however still appear in vocab.
-        auto result = _tokens->find("");
+        _tokens->find("");
         _tokens->erase("");
 
         _create_token_vector(max_tokens);
 
         _tokens->clear();
         delete _tokens;
+}
+
+int32_t **Vectorizer::vectorize(const std::vector<std::string> &data) {
+        int32_t **vectors = new int32_t*[data.size()];
+
+        auto get_ids = [&](const std::vector<std::string> &s_v, int index){
+                int size = (int) s_v.size();
+                int32_t* v = new int32_t[size];
+                for (int i = 0; i < size; i++){
+                        v[i] = _reverse_looku 
+                }
+                 
+        };
+        int data_size = (int) data.size();
+        for (int i = 0; i < data_size; i++) {
+                std::string s = data[i]; // Makes a copy, unfortunately.
+                s = _standardize(s);
+                std::vector<std::string> s_v = _split(s, ' ');
+                 
+        }
 }
 
 std::string Vectorizer::_standardize(std::string &str)
@@ -86,6 +113,7 @@ void Vectorizer::_create_token_vector(int max_tokens)
                 _vocab.resize(max_tokens);
                 _vocab.shrink_to_fit();
         }
+        std::for_each(_vocab.begin(), _vocab.end(), [&](Token &t){ _reverse_lookup.push_back(&(t.word));});
 }
 
 std::vector<std::string> Vectorizer::_split(const std::string &str, char delim)
