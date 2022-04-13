@@ -1,3 +1,0 @@
-/home/fane/markov_chain/build/CMakeFiles/rebuild_cache.dir
-/home/fane/markov_chain/build/CMakeFiles/edit_cache.dir
-/home/fane/markov_chain/build/CMakeFiles/markov_chain.dir
