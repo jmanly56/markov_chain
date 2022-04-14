@@ -22,7 +22,8 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
         // ensure the uniqueness of tokens, and a fast way to insert/update them.
         // However, after the initial creation of the tokens, I need something that
         // I can sort easily, and encapsulates all the data needed. The overhead
-        // of the map is no longer required.
+        // of the map is no longer required. I find this approach simpler than having to pass
+        // a reference to each function that needs it.
 
         if (max_tokens != -1 && max_tokens < 3) {
                 std::cerr << "Invalid parameter max_tokens. Acceptable values: -1 or a number > 2."
@@ -32,10 +33,12 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
 
         _tokens = new std::unordered_map<std::string, Token>{};
 
+        // I take this approach so as to avoid rechecking lower everytime
+        // the lambda is run.
         if (lower) {
                 auto process_data = [&](std::string &s) {
                         std::transform(s.begin(), s.end(), s.begin(),
-                                [](unsigned char c) { return std::tolower(c); });
+                                       [](unsigned char c) { return std::tolower(c); });
                         s = _standardize(s);
                         std::vector<std::string> v = _split(s, ' ');
                         _process_tokens(v);
@@ -49,12 +52,10 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
                         _process_tokens(v);
                 };
                 std::for_each(data.begin(), data.end(), process_data);
-       
         }
 
         // Remove empty string from the token list.
         // It will however still appear in vocab.
-        _tokens->find("");
         _tokens->erase("");
 
         _create_token_vector(max_tokens);
@@ -63,24 +64,14 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
         delete _tokens;
 }
 
-int32_t **Vectorizer::vectorize(const std::vector<std::string> &data) {
-        int32_t **vectors = new int32_t*[data.size()];
+ragged_matrix_t Vectorizer::vectorize(std::vector<std::string> &data, bool lower)
+{
+        ragged_matrix_t vectors;
+        vectors.reserve(data.size());
+        auto vectorize_line = [&](std::string &line) { vectors.push_back(_create_id_array(line, lower)); };
 
-        auto get_ids = [&](const std::vector<std::string> &s_v, int index){
-                int size = (int) s_v.size();
-                int32_t* v = new int32_t[size];
-                for (int i = 0; i < size; i++){
-                        v[i] = _reverse_looku 
-                }
-                 
-        };
-        int data_size = (int) data.size();
-        for (int i = 0; i < data_size; i++) {
-                std::string s = data[i]; // Makes a copy, unfortunately.
-                s = _standardize(s);
-                std::vector<std::string> s_v = _split(s, ' ');
-                 
-        }
+        std::for_each(data.begin(), data.end(), vectorize_line);
+        return vectors;
 }
 
 std::string Vectorizer::_standardize(std::string &str)
@@ -99,7 +90,7 @@ std::string Vectorizer::_standardize(std::string &str)
 
 void Vectorizer::_create_token_vector(int max_tokens)
 {
-        for (auto iter = _tokens->begin(); iter != _tokens->end(); iter++) {
+        for (auto iter = _tokens->begin(); iter != _tokens->end(); ++iter) {
                 iter->second.word = iter->first; // Assign the word to the token object.
                 _vocab.push_back(std::move(iter->second));
         }
@@ -113,7 +104,37 @@ void Vectorizer::_create_token_vector(int max_tokens)
                 _vocab.resize(max_tokens);
                 _vocab.shrink_to_fit();
         }
-        std::for_each(_vocab.begin(), _vocab.end(), [&](Token &t){ _reverse_lookup.push_back(&(t.word));});
+
+        // Create a vector of words, where the index is their integer representation.
+        std::for_each(_vocab.begin(), _vocab.end(),
+                      [&](Token &t) { _reverse_lookup.push_back(&(t.word)); });
+}
+
+std::vector<int32_t> Vectorizer::_create_id_array(std::string &line, bool lower) noexcept
+{
+        static std::vector<std::string> split_line;
+        std::vector<int32_t> v;
+        // split_line.clear();
+        if (lower) {
+                std::transform(line.begin(), line.end(), line.begin(),
+                               [](unsigned char c) { return std::tolower(c); });
+        }
+        line = _standardize(line);
+        split_line = _split(line, ' ');
+        v.reserve(split_line.size());
+
+        auto find_indexes = [&](std::string &word) {
+                auto it = std::find_if(_reverse_lookup.begin(), _reverse_lookup.end(),
+                                       [&](std::string *a) { return *a == word; });
+                if (it == _reverse_lookup.end()) {
+                        v.push_back(UNK_INDEX);
+                } else {
+                        v.push_back(std::distance(_reverse_lookup.begin(), it));
+                }
+        };
+
+        std::for_each(split_line.begin(), split_line.end(), find_indexes);
+        return v;
 }
 
 std::vector<std::string> Vectorizer::_split(const std::string &str, char delim)
@@ -125,6 +146,9 @@ std::vector<std::string> Vectorizer::_split(const std::string &str, char delim)
         while (getline(ss, substr, delim)) {
                 split_str.push_back(substr);
         }
+        auto it = std::remove_if(split_str.begin(), split_str.end(),
+                                       [&](std::string s) { return s == ""; });
+        split_str.erase(it, split_str.end());
         return split_str;
 }
 
