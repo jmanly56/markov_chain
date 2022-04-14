@@ -36,14 +36,8 @@ class Vectorizer
         /// Pre condition: `create_vocab` has been called.
         /// @param data: The text lines to vectorize.
         /// @param lower: Boolean value on whether to lowercase all letters. Default false.
-        /// @return A heap allocated 2D array of vectorized features. Must be deallocated.
+        /// @return A 2D vector of word ids.
         ragged_matrix_t vectorize(std::vector<std::string> &data, bool lower = false);
-
-        /// @brief Calculates and returns a heap allocated array of tf-idf values,
-        /// where each index corresponds to a given index of the vocabulary.
-        /// Pre condition: `create_vocab` has been called.
-        /// @return A heap allocated array of floats. Must be deallocated.
-        float *get_tf_idf_weights() const;
 
         /// @brief Gets the string token for each index. Can be used to get a reverse lookup.
         /// Pre-condition: `create_vocab` has been called.
@@ -71,6 +65,7 @@ class Vectorizer
         std::unordered_map<std::string, Token> *_tokens;
         std::vector<Token> _vocab;
         std::vector<std::string *> _reverse_lookup;
+        int _num_documents;
 
         /// @brief Remove certain characters from the string,
         /// and add space around punctuation.

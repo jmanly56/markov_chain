@@ -3,6 +3,7 @@
 #include <iostream>
 #include <regex>
 #include <set>
+#include <cmath>
 #include <sstream>
 
 const static std::regex chars_to_keep("[^ A-z0-9.?!,]");
@@ -30,7 +31,7 @@ void Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max
                           << " Did not create a vocabulary.\n";
                 return;
         }
-
+        _num_documents = data.size();
         _tokens = new std::unordered_map<std::string, Token>{};
 
         // I take this approach so as to avoid rechecking lower everytime
@@ -74,12 +75,22 @@ ragged_matrix_t Vectorizer::vectorize(std::vector<std::string> &data, bool lower
         return vectors;
 }
 
+const std::vector<std::string *> &Vectorizer::vocab() const
+{
+        return _reverse_lookup;
+}
+
+size_t Vectorizer::vocab_size() const
+{
+        return _reverse_lookup.size();
+}
+
 std::string Vectorizer::_standardize(std::string &str)
 {
         str = std::regex_replace(str, chars_to_keep, "");
 
         // Add spaces around any character in the capture group, denoted by `\1`.
-        str = std::regex_replace(str, chars_add_space, " \1 ");
+        str = std::regex_replace(str, chars_add_space, " $1 ");
 
         // Trim whitespace at the end.
         std::string::iterator end = std::remove(str.end(), str.end(), ' ');
