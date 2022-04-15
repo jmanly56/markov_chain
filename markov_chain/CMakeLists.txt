@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 project(markov_chain LANGUAGES CXX)
 
+
 add_library(markov_chain SHARED
     include/markov_chain.h
     markov_chain.cpp
