@@ -1,10 +1,9 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.13)
 
-set(CMAKE_C_COMPILER clang)
+add_subdirectory(vectorizer)
+add_subdirectory(markov_chain)
 
-set(CMAKE_CXX_COMPILER clang++)
-
-project(markov_chain LANGUAGES CXX)
+project(markov_chain++ LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -14,16 +13,10 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_subdirectory(vectorizer)
-
-add_executable(markov_chain
+add_executable(mc.out
         main.cpp
-        markov_chain.cpp
-        markov_chain.h
 )
 
-target_link_libraries(markov_chain vectorizer)
+target_link_libraries(mc.out PRIVATE vectorizer markov_chain "-Wl")
 
-target_compile_options(markov_chain PRIVATE -Wall -W -pedantic -pipe
-        -Wno-unused-parameter -ggdb -O2)
-
+target_compile_options(mc.out PRIVATE -Wall -pedantic -pipe)

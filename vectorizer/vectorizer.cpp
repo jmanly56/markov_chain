@@ -1,9 +1,9 @@
-#include "vectorizer.h"
+#include "include/vectorizer.h"
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <regex>
 #include <set>
-#include <cmath>
 #include <sstream>
 
 const static std::regex chars_to_keep("[^ A-z0-9.?!,]");
@@ -69,7 +69,8 @@ ragged_matrix_t Vectorizer::vectorize(std::vector<std::string> &data, bool lower
 {
         ragged_matrix_t vectors;
         vectors.reserve(data.size());
-        auto vectorize_line = [&](std::string &line) { vectors.push_back(_create_id_array(line, lower)); };
+        auto vectorize_line
+                = [&](std::string &line) { vectors.push_back(_create_id_array(line, lower)); };
 
         std::for_each(data.begin(), data.end(), vectorize_line);
         return vectors;
@@ -158,7 +159,7 @@ std::vector<std::string> Vectorizer::_split(const std::string &str, char delim)
                 split_str.push_back(substr);
         }
         auto it = std::remove_if(split_str.begin(), split_str.end(),
-                                       [&](std::string s) { return s == ""; });
+                                 [&](std::string s) { return s == ""; });
         split_str.erase(it, split_str.end());
         return split_str;
 }
