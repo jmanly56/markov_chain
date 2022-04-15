@@ -1,4 +1,4 @@
-#include "vectorizer.h"
+#include "vectorizer/vectorizer.h"
 #include <fstream>
 #include <iostream>
 
