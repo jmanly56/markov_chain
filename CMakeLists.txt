@@ -14,13 +14,15 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_subdirectory(vectorizer)
+
 add_executable(markov_chain
         main.cpp
-        vectorizer.cpp
-        vectorizer.h
         markov_chain.cpp
         markov_chain.h
 )
+
+target_link_libraries(markov_chain vectorizer)
 
 target_compile_options(markov_chain PRIVATE -Wall -W -pedantic -pipe
         -Wno-unused-parameter -ggdb -O2)
