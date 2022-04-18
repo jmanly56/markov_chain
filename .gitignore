@@ -5,6 +5,7 @@
 
 data/*
 compile_commands*
+build/*
 
 # User-specific files
 *.rsuser
