@@ -7,7 +7,13 @@
 #include <vector>
 
 #define PAD_INDEX 0
+#define PAD_TOKEN ""
 #define UNK_INDEX 1
+#define UNK_TOKEN "[UNK]"
+#define START_INDEX 2
+#define START_TOKEN "[START]"
+#define END_INDEX 3
+#define END_TOKEN "[END]"
 
 typedef std::vector<std::vector<int32_t>> ragged_matrix_t;
 
@@ -28,7 +34,7 @@ class Vectorizer
         /// @param lower: Whether to change all characters to lowercase. Default false.
         /// @param max_tokens: The number of tokens to keep. Keeps the most frequent. Default -1
         /// means no limit. The actual size of the vocab will be max_tokens - 2 because of the
-        /// reserved indices. Acceptable values of max_tokens: -1 or n > 2.
+        /// reserved indices. Acceptable values of max_tokens: -1 or n > 4.
         int create_vocab(std::vector<std::string> data, bool lower = false, int max_tokens = -1);
 
         /// @brief Convert the input data to an integer index. Will allocate a 2D array on the heap.

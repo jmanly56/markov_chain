@@ -11,8 +11,10 @@ const static std::regex chars_add_space("([.?!,])");
 
 Vectorizer::Vectorizer()
 {
-        _vocab.push_back({"", 0, 0});
-        _vocab.push_back({"[UNK]", 0, 0});
+        _vocab.push_back({PAD_TOKEN, 0, 0});
+        _vocab.push_back({UNK_TOKEN, 0, 0});
+        _vocab.push_back({START_TOKEN, 0, 0});
+        _vocab.push_back({END_TOKEN, 0, 0});
 }
 
 int Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max_tokens)
@@ -26,7 +28,7 @@ int Vectorizer::create_vocab(std::vector<std::string> data, bool lower, int max_
         // of the map is no longer required. I find this approach simpler than having to pass
         // a reference to each function that needs it.
 
-        if (max_tokens != -1 && max_tokens < 3) {
+        if (max_tokens != -1 && max_tokens < 5) {
                 std::cerr << "Invalid parameter max_tokens. Acceptable values: -1 or a number > 2."
                           << " Did not create a vocabulary.\n";
                 return -1;
@@ -112,7 +114,7 @@ void Vectorizer::_create_token_vector(int max_tokens)
         // Regardless of max_tokens, we need to sort based on term frequency.
         // The reason for the + 2 is to skip the padding and unknown tokens.
         // We want those to always be index 0 and 1, respectively.
-        std::sort(_vocab.begin() + 2, _vocab.end(), comp);
+        std::sort(_vocab.begin() + 4, _vocab.end(), comp);
         if (max_tokens != -1) {
                 _vocab.resize(max_tokens);
                 _vocab.shrink_to_fit();
