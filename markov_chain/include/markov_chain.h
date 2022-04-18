@@ -8,6 +8,7 @@
 #define PAD_INDEX 0
 #define UNK_INDEX 1
 
+/// @brief A simple typedef used by the vectorizer. A vector of vectors of ints.
 typedef std::vector<std::vector<int32_t>> ragged_matrix_t;
 
 class Markov_Chain {
@@ -16,18 +17,13 @@ public:
         int create_chain(const ragged_matrix_t& data);
 private:
         static std::default_random_engine _rand_gen;
+        static std::uniform_real_distribution<float> uniform;
         struct Node {
-                ~Node() {
-                        delete next_ids;
-                        delete next_id_counts;
-                        delete d;
-                }
                 int32_t id = 0;
-                size_t size = 0;
-                int32_t *next_ids = nullptr;
-                int32_t *next_id_counts = nullptr;
-                std::discrete_distribution<int32_t> *d = nullptr;
+                std::vector<int32_t> next_ids;
+                std::vector<float> next_id_probabilities;
         };
         std::vector<Node> _nodes;
+        int _add_node(const int32_t node_id);
 };
 #endif // MARKOV_CHAIN_H
