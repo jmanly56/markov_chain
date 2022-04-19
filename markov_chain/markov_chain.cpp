@@ -13,7 +13,7 @@ Markov_Chain::Markov_Chain(){
 
 int Markov_Chain::create_chain(const ragged_matrix_t& data, size_t vocab_size)
 {
-        _nodes.reserve(vocab_size);
+        _nodes.resize(vocab_size);
         std::for_each(data.begin(), data.end(), _process_line);
 }
 
@@ -28,7 +28,7 @@ void Markov_Chain::_process_line(const std::vector<int32_t> &line)
 
 int Markov_Chain::_process_id(const int32_t node_id, const int32_t prev_node_id)
 {
-        _nodes[node_id].id = node_id;
+        /*_nodes[node_id].id = node_id;
         Node &n = _nodes[prev_node_id];
-        n.next_ids[node_id] += 1;
+        n.next_ids[node_id] += 1;*/
 }
