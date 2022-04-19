@@ -15,6 +15,12 @@ public:
         Markov_Chain();
         int create_chain(const ragged_matrix_t& data, size_t vocab_size);
 private:
+        typedef struct {
+                int32_t id = 0;
+                std::vector<int32_t> next_ids;
+                std::vector<float> probs;
+        } node_t;
+
         static std::default_random_engine _rand_gen;
         static std::uniform_real_distribution<float> uniform;
         std::vector<node_t> _nodes;
