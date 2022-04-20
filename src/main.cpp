@@ -1,4 +1,5 @@
 #include "vectorizer.h"
+#include "markov_chain.h"
 #include <fstream>
 #include <iostream>
 
@@ -15,5 +16,9 @@ int main()
         Vectorizer t;
         t.create_vocab(data);
         ragged_matrix_t v = t.vectorize(data);
+        Markov_Chain m;
+
+        m.create_chain(v, t.vocab_size());
+
         return 0;
 }
