@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <sstream>
 
 Markov_Chain::Markov_Chain(){
         _nodes.reserve(5);
@@ -21,6 +22,31 @@ int Markov_Chain::create_chain(const ragged_matrix_t& data, size_t vocab_size)
         }
         _finalize_nodes();
         return 0;
+}
+
+std::vector<int32_t> Markov_Chain::traverse(int max_len) noexcept
+{
+        std::vector<int32_t> indices;
+        Node &n = _nodes[START_INDEX];
+        for (int i = 0; i < max_len; i++) {
+                n = _nodes[n.next_ids[n.d(_rand_gen)]];
+                if (n.id != END_INDEX) {
+                        if (n.id != UNK_INDEX)
+                                indices.push_back(n.id);
+                } else {
+                        return indices;
+                }
+        }
+        return indices;
+}
+
+std::string Markov_Chain::to_string(const std::vector<int32_t> &indices,
+                                    const std::vector<std::string *> &vocab)
+{
+        std::stringstream ss;
+        std::for_each(indices.begin(), indices.end(),
+                      [&](int32_t index) { ss << *(vocab[index]) << " "; });
+        return ss.str();
 }
 
 void Markov_Chain::_process_line(const std::vector<int32_t> &line)

@@ -19,6 +19,9 @@ int main()
         Markov_Chain m;
 
         m.create_chain(v, t.vocab_size());
+        std::string s = Markov_Chain::to_string(m.traverse(), t.vocab());
+        std::cout << s << "\n";
+
 
         return 0;
 }
