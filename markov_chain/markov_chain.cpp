@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cmath>
 #include <sstream>
+#include <chrono>
 
 Markov_Chain::Markov_Chain(){
         _nodes.reserve(5);
@@ -11,6 +12,7 @@ Markov_Chain::Markov_Chain(){
         _nodes.push_back({UNK_INDEX}); // 1
         _nodes.push_back({START_INDEX}); // 2
         _nodes.push_back({END_INDEX}); //3
+        this->_rand_gen = std::mt19937(std::chrono::steady_clock::now().time_since_epoch().count());
 }
 
 int Markov_Chain::create_chain(const ragged_matrix_t& data, size_t vocab_size)

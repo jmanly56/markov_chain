@@ -24,7 +24,7 @@ public:
                 std::discrete_distribution<int32_t> d;
         } node_t;
 
-        std::default_random_engine _rand_gen;
+        std::mt19937 _rand_gen;
         std::vector<node_t> _nodes;
 
         int _process_id(const int32_t node_id, const int32_t prev_node_id);
