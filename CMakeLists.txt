@@ -7,6 +7,7 @@ set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_CURRENT_LIST_DIR}/CompilerOptions.cm
 add_subdirectory(vectorizer)
 add_subdirectory(markov_chain)
 add_subdirectory(src)
+add_subdirectory(nn)
 
 project(markov_chain++ LANGUAGES CXX)
 
