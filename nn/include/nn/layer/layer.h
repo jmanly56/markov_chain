@@ -10,6 +10,7 @@ class Layer {
                 Layer(std::string name);
                 virtual ~Layer() = 0;
                 virtual Eigen::MatrixXd call(Eigen::MatrixXd &m) = 0;
+                virtual Eigen::MatrixXd operator()(Eigen::MatrixXd &m) = 0;
                 const std::string& name() const;
         protected:
                 std::string _name;
