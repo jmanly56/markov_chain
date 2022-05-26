@@ -2,20 +2,22 @@
 #include "../vectorizer/include/vectorizer.h"
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <sstream>
-#include <chrono>
 
-Markov_Chain::Markov_Chain(){
+Markov_Chain::Markov_Chain()
+{
         _nodes.reserve(5);
         _nodes.push_back({PAD_INDEX}); // 0
         _nodes.push_back({UNK_INDEX}); // 1
         _nodes.push_back({START_INDEX}); // 2
-        _nodes.push_back({END_INDEX}); //3
+        _nodes.push_back({END_INDEX}); // 3
+        // Initialize to current time.
         this->_rand_gen = std::mt19937(std::chrono::steady_clock::now().time_since_epoch().count());
 }
 
-int Markov_Chain::create_chain(const ragged_matrix_t& data, size_t vocab_size)
+int Markov_Chain::create_chain(const ragged_matrix_t &data, size_t vocab_size)
 {
         _nodes.resize(vocab_size);
         for (auto &line : data) {
@@ -31,11 +33,12 @@ std::vector<int32_t> Markov_Chain::traverse(int max_len) noexcept
         std::vector<int32_t> indices;
         Node &n = _nodes[START_INDEX];
         for (int i = 0; i < max_len; i++) {
-                n = _nodes[n.next_ids[n.d(_rand_gen)]];
+                n = _nodes[n.next_ids[n.d(_rand_gen)]]; // Select a node to traverse randomly from
+                                                        // the distribution.
                 if (n.id != END_INDEX) {
                         if (n.id != UNK_INDEX)
                                 indices.push_back(n.id);
-                } else {
+                } else { // We've reached the END token so exit the function.
                         return indices;
                 }
         }
@@ -62,7 +65,6 @@ void Markov_Chain::_process_line(const std::vector<int32_t> &line)
         } else {
                 _process_id(END_INDEX, line[0]);
         }
-        
 }
 
 int Markov_Chain::_find_index(const std::vector<int32_t> &next_ids, int32_t id) const noexcept
@@ -76,9 +78,11 @@ int Markov_Chain::_find_index(const std::vector<int32_t> &next_ids, int32_t id) 
 
 void Markov_Chain::_finalize_nodes() noexcept
 {
+        // Takes the counts inside n.probs and uses them as the weights for the distribution.
         auto create_probabilities = [&](Node &n) {
                 n.d = std::discrete_distribution<int32_t>(n.probs.begin(), n.probs.end());
         };
+        // + 2 to skip the PAD and UNK tokens.
         std::for_each(_nodes.begin() + 2, _nodes.end(), create_probabilities);
 }
 
